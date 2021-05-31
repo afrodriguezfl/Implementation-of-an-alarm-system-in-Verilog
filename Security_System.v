@@ -1,14 +1,23 @@
 module Security_System
 (
-	input wire clk, reset,
-	input wire init, utrsnd_hub, utrsnd_else,
-	input wire [3:0] inWIFI,
-	/*
-	output wire outWIFI_g, siren_g, lock_g,
-	output reg outWIFI_gf, siren_gf, lock_gf
-	*/
-	output wire inactive_g, active_g, alarm_g, emergency_g,
-	output reg inactive_gf, active_gf, alarm_gf, emergency_gf
+
+	////////////////FSM/////////////////////
+		input wire clk, reset,
+		input wire init, utrsnd_hub, utrsnd_else,
+		input wire [3:0] inWIFI,
+
+		output reg outWIFI_gf, siren_gf, lock_gf, 
+		output reg inactive_gf, active_gf, alarm_gf, emergency_gf,
+	////////////////////////////////////////	
+	
+	////////////////LCD/////////////////////
+		inout [7:0] LCD_DATA,
+		output LCD_RW,
+		output LCD_EN,
+		output LCD_RS,
+		output reg [1:0] message_gf
+	////////////////////////////////////////	
+
 );
 	
 	localparam [1:0]
@@ -16,10 +25,12 @@ module Security_System
 	ACTIVE    = 2'b01,
    ALARM     = 2'b10,
    EMERGENCY = 2'b11;
-	
-	reg[1:0] state, next_state;
-	//reg outWIFI, siren, lock;
+
+	reg [1:0] state, next_state, message;
+	reg outWIFI, siren, lock;
 	reg inactive_o, active_o, alarm_o, emergency_o;
+
+	LCD_Top lcd(.MESG(message_gf),.CLOCK_50(clk),.LCD_RW(LCD_RW),.LCD_EN(LCD_EN),.LCD_RS(LCD_RS),.LCD_DATA(LCD_DATA));
 
 	always @(posedge clk, posedge reset)
 	begin
@@ -30,46 +41,47 @@ module Security_System
 			state <= next_state;
 		end
 	end
+	
 	always @(init, utrsnd_hub, utrsnd_else, inWIFI, state) begin 
+
 		next_state = state;
-		/*
 		outWIFI = 1'b0;
 		siren   = 1'b0;
 		lock    = 1'b0;
-		*/
-		inactive_o = 1'b1;
-		active_o   = 1'b1;
-		alarm_o    = 1'b1;
-		emergency_o= 1'b1;
+		inactive_o  = 1'b1;
+		active_o    = 1'b1;
+		alarm_o     = 1'b1;
+		emergency_o = 1'b1;
+		message = 2'b00;
 		
 		case (state)
+		
 			INACTIVE : begin
-			/*
 				outWIFI = 1'b0;
 				siren   = 1'b0;
 				lock    = 1'b0;
-			*/
-				inactive_o = 1'b0;
-				active_o   = 1'b1;
-				alarm_o    = 1'b1;
-				emergency_o= 1'b1;
+				inactive_o  = 1'b0;
+				active_o    = 1'b1;
+				alarm_o     = 1'b1;
+				emergency_o = 1'b1;
+				message = 2'b00;
 				if (init == 1'b1) begin
 						next_state = ACTIVE; 
 					end
 				else begin 
 						next_state = INACTIVE; 
 					end
-				end
+			end
+				
 			ACTIVE : begin
-			/*
-				outWIFI = 1'b1;
-				siren   = 1'b1;
-				lock    = 1'b1;
-			*/
-				inactive_o = 1'b1;
-				active_o   = 1'b0;
-				alarm_o    = 1'b1;
-				emergency_o= 1'b1;
+				outWIFI = 1'b0;
+				siren   = 1'b0;
+				lock    = 1'b0;
+				inactive_o  = 1'b1;
+				active_o    = 1'b0;
+				alarm_o     = 1'b1;
+				emergency_o = 1'b1;
+				message = 2'b01;
 				if (utrsnd_else == 1'b1) begin
 						next_state = ALARM; 
 					end
@@ -79,17 +91,17 @@ module Security_System
 				else begin 
 						next_state = ACTIVE; 
 					end
-				end
+			end
+				
 			ALARM : begin
-			/*
 				outWIFI = 1'b1;
 				siren   = 1'b1;
 				lock    = 1'b0;
-			*/
-				inactive_o = 1'b1;
-				active_o   = 1'b1;
-				alarm_o    = 1'b0;
-				emergency_o= 1'b1;
+				inactive_o  = 1'b1;
+				active_o    = 1'b1;
+				alarm_o     = 1'b0;
+				emergency_o = 1'b1;
+				message = 2'b10;
 				if (inWIFI == 4'b1010) begin
 						next_state = INACTIVE; 
 					end
@@ -102,17 +114,17 @@ module Security_System
 				else begin 
 						next_state = ALARM; 
 					end
-				end
+			end
+				
 			EMERGENCY : begin
-			/*
 				outWIFI = 1'b1;
 				siren   = 1'b1;
 				lock    = 1'b1;
-			*/
-				inactive_o = 1'b1;
-				active_o   = 1'b1;
-				alarm_o    = 1'b1;
-				emergency_o= 1'b0;
+				inactive_o  = 1'b1;
+				active_o    = 1'b1;
+				alarm_o     = 1'b1;
+				emergency_o = 1'b0;
+				message = 2'b11;
 				if (inWIFI == 4'b1010) begin
 						next_state = INACTIVE; 
 					end
@@ -122,42 +134,33 @@ module Security_System
 				else begin 
 						next_state = EMERGENCY; 
 					end
-				end
-		 endcase
+			end
+	
+		endcase
+		 
 	end  
-
+	
 	always @(posedge clk, posedge reset) begin 
 			if (reset) begin
-			/*
 				outWIFI_gf <= 1'b0;
 				siren_gf   <= 1'b0;
 				lock_gf    <= 1'b0;
-			*/
-				inactive_gf <= 1'b1;
-				active_gf   <= 1'b1;
-				alarm_gf    <= 1'b1;
-				emergency_gf<= 1'b1;
+				inactive_gf  <= 1'b1;
+				active_gf    <= 1'b1;
+				alarm_gf     <= 1'b1;
+				emergency_gf <= 1'b1;
+				message_gf <= 2'b00;
 			end
 			else begin
-			/*
 				outWIFI_gf <= outWIFI;
 				siren_gf   <= siren;
 				lock_gf    <= lock;
-			*/
-				inactive_gf <= inactive_o;
-				active_gf   <= active_o;
-				alarm_gf    <= alarm_o;
-				emergency_gf<= emergency_o;
+				inactive_gf  <= inactive_o;
+				active_gf    <= active_o;
+				alarm_gf     <= alarm_o;
+				emergency_gf <= emergency_o;
+				message_gf <= message;
 			end
 	end
-	/*
-	assign outWIFI_g = outWIFI; 
-	assign siren_g   = siren;
-	assign lock_g    = lock;
-	*/
-	assign inactive_g = inactive_o;
-	assign active_g   = active_o;
-	assign alarm_g    = alarm_o;
-	assign emergency_g= emergency_o;
-	
+
 endmodule 
