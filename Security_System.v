@@ -3,7 +3,7 @@ module Security_System
 
 	////////////////FSM/////////////////////
 		input wire clk, reset,
-		input wire init, utrsnd_hub, utrsnd_else,
+		input wire init, utrsnd_else,
 		input wire [3:0] inWIFI,
 
 		output reg outWIFI_gf, siren_gf, lock_gf, 
@@ -41,8 +41,9 @@ module Security_System
 
 	LCD_Top lcd(.MESG(message_gf),.CLOCK_50(clk),.LCD_RW(LCD_RW),.LCD_EN(LCD_EN),.LCD_RS(LCD_RS),.LCD_DATA(LCD_DATA));
 	
-	wire conexservo; //señal de conexión entre mostrarnum y servoPWM
+	//wire conexservo; //señal de conexión entre mostrarnum y servoPWM
 	wire [32:0] distance;
+	wire utrsnd_hub;
 	
 	sonic sc(
 		clk,
@@ -51,13 +52,13 @@ module Security_System
 		sseg,
 		anodos,
 		ledsalida,
-		conexservo
+		utrsnd_hub
 	);
 
 	servoPWM sv(
 		clk,
 		servo, //señal de salida definitiva (SSD)
-		conexservo // entrada de mostrarnum (Sensor de ultrasonido)
+		lock_gf// entrada de mostrarnum (Sensor de ultrasonido)
 	);
 
 	always @(posedge clk, posedge reset)
