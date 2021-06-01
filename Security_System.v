@@ -7,7 +7,7 @@ module Security_System
 		input wire [3:0] inWIFI,
 
 		output reg outWIFI_gf, siren_gf, lock_gf, 
-		output reg inactive_gf, active_gf, alarm_gf, emergency_gf,
+		output reg inactive_gf, active_gf, alarm_gf, emergency_gf, // validation variables
 	////////////////////////////////////////	
 	
 	////////////////LCD/////////////////////
@@ -15,9 +15,18 @@ module Security_System
 		output LCD_RW,
 		output LCD_EN,
 		output LCD_RS,
-		output reg [1:0] message_gf
-	////////////////////////////////////////	
-
+		output reg [1:0] message_gf,
+	////////////////////////////////////////
+	
+	///////////SENSORES Y SERVO/////////////
+		input echo,
+		output trig, 
+		output [6:0] sseg,
+		output [5:0] anodos,
+		output ledsalida,
+		output servo
+	////////////////////////////////////////
+		
 );
 	
 	localparam [1:0]
@@ -31,6 +40,25 @@ module Security_System
 	reg inactive_o, active_o, alarm_o, emergency_o;
 
 	LCD_Top lcd(.MESG(message_gf),.CLOCK_50(clk),.LCD_RW(LCD_RW),.LCD_EN(LCD_EN),.LCD_RS(LCD_RS),.LCD_DATA(LCD_DATA));
+	
+	wire conexservo; //señal de conexión entre mostrarnum y servoPWM
+	wire [32:0] distance;
+	
+	sonic sc(
+		clk,
+		echo,
+		trig,
+		sseg,
+		anodos,
+		ledsalida,
+		conexservo
+	);
+
+	servoPWM sv(
+		clk,
+		servo, //señal de salida definitiva (SSD)
+		conexservo // entrada de mostrarnum (Sensor de ultrasonido)
+	);
 
 	always @(posedge clk, posedge reset)
 	begin
