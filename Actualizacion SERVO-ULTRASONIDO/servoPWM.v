@@ -33,7 +33,6 @@ counter4<=counter4+1;
 */
 
 //BAJADA 
-
 if(activacion==0)begin // De 180° a 0°
 
 	if(counter4==100_000)begin
