@@ -1,13 +1,13 @@
 #include <Ubidots.h>
 
 
-const char* UBIDOTS_TOKEN = "BBFF-KdyEvwxDetF8KP7TEcp36Hsvxq6sIS";  // Put here your Ubidots TOKEN
-const char* WIFI_SSID = "Laniakea";      // Put here your Wi-Fi SSID
-const char* WIFI_PASS = "juan_cortes//10050**";      // Put here your Wi-Fi password 
+const char* UBIDOTS_TOKEN = "";  // Put here your Ubidots TOKEN
+const char* WIFI_SSID = "";      // Put here your Wi-Fi SSID
+const char* WIFI_PASS = "";      // Put here your Wi-Fi password 
 
 Ubidots ubidots(UBIDOTS_TOKEN, UBI_HTTP);
 
-#define DEVICE_LABEL "10521c01f4f4"
+#define DEVICE_LABEL "device_name_ubidots"
 
 #define LAB_inwifi "senal_bogota"
 #define LAB_outwifi "senal_cucuta"// Se envía 1 señal, pues la interpretación ocurre en el ESP8266
