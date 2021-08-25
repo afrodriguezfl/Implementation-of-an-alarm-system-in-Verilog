@@ -20,8 +20,9 @@ module mostrarnum(
 	wire [3:0] dig5 = (distance / 10000) % 10;
 	wire [3:0] dig6 = (distance / 100000) % 10;
 
-	divfreq div(clk,clk1);
-
+	//divfreq div(clk,clk1);
+	divfreq #(25000) div1(clk, clk1);
+	
 	sevensegs sev(bcd, sseg);
 
 	always @(posedge clk1)begin
