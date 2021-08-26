@@ -1,4 +1,4 @@
-module buzzeralarm(clk, aux, speaker);
+module Buzzer_alarm(clk, aux, speaker);
 input clk;
 input aux;
 output speaker;
