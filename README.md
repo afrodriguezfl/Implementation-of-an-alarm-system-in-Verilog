@@ -11,3 +11,6 @@ del sensor de un punto de acceso específico asociado a un estado de emergencia 
 un nivel muy alto de peligro solo activará la alarma, la cual enciende Buzzers y LEDs, mientras que 
 si otro sensor asociado a un nivel de emergencia más alto puede llegar a cerrar por completo el lugar, 
 todo esto mostrado en una pantalla LCD en tiempo real notificando el estado en el que se encuentra el sistema.
+
+El informe de este proyecto se puede encontrar en el siguiente [enlace](https://drive.google.com/file/d/1RtWjojc3hKZmuhqmEbdj7GlZeBmeu0Sf/view?usp=sharing)
+El video de este proyecto se puede encontrar en el siguiente 
