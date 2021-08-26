@@ -14,4 +14,4 @@ todo esto mostrado en una pantalla LCD en tiempo real notificando el estado en e
 
 El informe de este proyecto se puede encontrar en el siguiente [enlace](https://drive.google.com/file/d/1RtWjojc3hKZmuhqmEbdj7GlZeBmeu0Sf/view?usp=sharing).
 
-El video de este proyecto se puede encontrar en el siguiente 
+El video de este proyecto se puede encontrar en el siguiente [enlace](https://drive.google.com/file/d/1oMQXNjwnbcolwgV_sVOezgPyk_zQ2ztE/view?usp=sharing). 
