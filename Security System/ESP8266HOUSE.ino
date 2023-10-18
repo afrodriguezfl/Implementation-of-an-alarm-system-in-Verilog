@@ -1,7 +1,7 @@
 #include <Ubidots.h>
 
 
-const char* UBIDOTS_TOKEN = "BBFF-KdyEvwxDetF8KP7TEcp36Hsvxq6sIS";  // Put here your Ubidots TOKEN
+const char* UBIDOTS_TOKEN = "";  // Put here your Ubidots TOKEN
 const char* WIFI_SSID = "NAMEOFTHENET";      // Put here your Wi-Fi SSID
 const char* WIFI_PASS = "PASSWORD";      // Put here your Wi-Fi password 
 
